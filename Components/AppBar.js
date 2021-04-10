@@ -6,7 +6,6 @@ export default function AppBar() {
   return (
     <Appbar.Header statusBarHeight={0}>
       <Appbar.Content title="Cinemaholic" />
-      <Appbar.Action icon="cog-outline" />
     </Appbar.Header>
   );
 }
