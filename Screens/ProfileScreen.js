@@ -5,12 +5,12 @@ import {  StyleSheet, View, StatusBar } from "react-native";
 import { useTheme } from "@react-navigation/native"
 
 
-export default function RecommendationScreen({ navigation }) {
+export default function ProfileScreen({ navigation }) {
     const { colors } = useTheme();
     return (
         <View style={{ backgroundColor: colors.card, ...styles.container }}>
-            <Text>This is Recommendation Screen</Text>
-            <Button onPress={() => navigation.navigate('Home')}>click me</Button>
+            <Text>This is Profile Screen</Text>
+            {/* <Button onPress={() => navigation.navigate('Home')}>click me</Button> */}
         </View>
     );
 }

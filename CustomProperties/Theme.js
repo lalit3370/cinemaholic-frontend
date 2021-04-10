@@ -13,6 +13,7 @@ export const CombinedDefaultTheme = {
     colors: {
         ...PaperDefaultTheme.colors,
         ...NavigationDefaultTheme.colors,
+        icon: "white"
     },
 };
 export const CombinedDarkTheme = {
@@ -21,5 +22,6 @@ export const CombinedDarkTheme = {
     colors: {
         ...PaperDarkTheme.colors,
         ...NavigationDarkTheme.colors,
+        icon: "white"
     },
 };
