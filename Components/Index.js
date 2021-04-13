@@ -11,7 +11,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import BottomTab from "./BottomTab"
 const Tab = createMaterialTopTabNavigator();
 
-export default function Home() {
+export default function Index() {
   const { theme, setTheme } = React.useContext(ThemeContext);
   return (
     <PaperProvider theme={theme}>
@@ -21,3 +21,4 @@ export default function Home() {
     </PaperProvider>
   );
 }
+
