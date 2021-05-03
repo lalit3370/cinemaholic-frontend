@@ -1,95 +1,96 @@
 import { useTheme } from "@react-navigation/native";
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
-import {
-  Card, Title, Text, Subheading
-} from "react-native-paper";
+import React, { useState, useContext } from "react";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Image } from "react-native-elements";
+import { ActivityIndicator, Card, Text } from "react-native-paper";
+import DataContext from "../Contexts/DataContext";
+import SelectedMovieContext from "../Contexts/SelectedMovieContext";
+// import data1 from "../assets/movie data/data1";
 
-const moviedata = [
-  {
-    id: "1",
-    title: "The Falcon and the Winter Soldier (2021)",
-    url: "https://www.themoviedb.org/t/p/w220_and_h330_face/6kbAMLteGO8yyewYau6bJ683sw7.jpg"
-  },
-  {
-    id: "2",
-    title: "Marvel Studios: Legends",
-    url: "https://www.themoviedb.org/t/p/w220_and_h330_face/EpDuYIK81YtCUT3gH2JDpyj8Qk.jpg"
-  },
-  {
-    id: "3",
-    title: "Game of Thrones",
-    url: "https://www.themoviedb.org/t/p/w220_and_h330_face/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg"
-  },
-  {
-    id: "3",
-    title: "Game of Thrones",
-    url: "https://www.themoviedb.org/t/p/w220_and_h330_face/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg"
-  },
-  {
-    id: "3",
-    title: "Game of Thrones",
-    url: "https://www.themoviedb.org/t/p/w220_and_h330_face/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg"
-  }
-];
-
-function MovieCard({ item }) {
-  return (
-    <Card style={styles.movieCard}>
-      <View style={styles.cardContainer}>
-        <Subheading style={{ fontSize: 15, fontWeight: "bold" }} numberOfLines={2}>{item.item.title}</Subheading>
-        <Card.Cover
-          resizeMode="cover"
-          resizeMethod="scale"
-          source={{
-            uri: item.item.url
-          }}
-        />
-      </View>
-    </Card>
-  )
-}
-
-export default function MovieScreen() {
+const MovieCard = React.memo(function MovieCard(props) {
   const { colors } = useTheme();
+  const [isSelected, setIsSelected] = useState(false);
+  return (
+    <Pressable
+      onLongPress={() => {
+        console.log(props.item.item.title);
+        setIsSelected(true);
+        let updatedSML = props.ML.selectedMovieList;
+        if (!updatedSML.includes(props.item.item.mlId)) {
+          updatedSML.push(props.item.item.mlId);
+          props.ML.setSelectedMovieList(updatedSML);
+        }
+      }}
+      onPress={() => {
+        if (isSelected) {
+          setIsSelected(false);
+          let arrindex = props.ML.selectedMovieList.indexOf(
+            props.item.item.mlId
+          );
+          let updatedSML = props.ML.selectedMovieList;
+          updatedSML.splice(arrindex, 1);
+          props.ML.setSelectedMovieList(updatedSML);
+        }
+      }}
+    >
+      <Card
+        style={{
+          ...styles.movieCard,
+          borderColor: isSelected === true ? colors.primary : colors.surface,
+        }}
+      >
+        <Image
+          source={{ uri: props.item.item.imgurl }}
+          style={{
+            height: 231,
+            width: 140,
+          }}
+          PlaceholderContent={<ActivityIndicator color="red" />}
+          placeholderStyle={{ backgroundColor: colors.card }}
+          containerStyle={{ margin: 0 }}
+        />
+      </Card>
+    </Pressable>
+  );
+});
+
+function MovieScreen() {
+  const { selectedMovieList, setSelectedMovieList } = useContext(
+    SelectedMovieContext
+  );
+
+  const { colors } = useTheme();
+  const fullMovieData = React.useContext(DataContext);
   function renderMovieCard(item) {
     return (
-      <MovieCard item={item} />
-    )
+      <MovieCard item={item} ML={{ selectedMovieList, setSelectedMovieList }} />
+    );
   }
   return (
-    <View style={{ backgroundColor: colors.card, ...styles.container }}>
-      <FlatList 
-        data={moviedata}
+    <View
+      style={{ backgroundColor: colors.backgroundColor, ...styles.container }}
+    >
+      <FlatList
+        data={fullMovieData}
         renderItem={renderMovieCard}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.mlId}
         numColumns={2}
-        
       />
+      {/* <Text>hello</Text> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // padding:5,
     flex: 1,
-    // flexDirection: "row",
-    // flexWrap:"wrap",
-    // justifyContent: "space-evenly",
-    // alignContent: "space-around"
+    alignItems: "center",
   },
   movieCard: {
-    flexBasis: 150,
-    borderColor:"black",
-    borderStyle:"dotted",
-    margin: 18
-    // height:257,
+    margin: 16,
+    padding: 1,
+    borderStyle: "solid",
+    borderWidth: 6,
   },
-  cardContainer: {
-    margin: 5,
-    
-  }
 });
-
-
+export default MovieScreen;

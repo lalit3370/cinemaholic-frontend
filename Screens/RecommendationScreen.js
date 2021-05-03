@@ -1,30 +1,54 @@
+import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Appbar, Provider as PaperProvider, Text,Button } from "react-native-paper";
-import {  StyleSheet, View, StatusBar } from "react-native";
-import { useTheme } from "@react-navigation/native"
+import { StyleSheet, View } from "react-native";
+import { Button, Text, ActivityIndicator } from "react-native-paper";
+import SelectedMovieContext from "../Contexts/SelectedMovieContext";
 
-
+function Unfetched(props) {
+  const { colors } = useTheme();
+  const { seletedMovieList } = React.useContext(SelectedMovieContext);
+  const [isLoading, setIsLoading] = React.useState(false);
+  return (
+    <View style={{ backgroundColor: colors.card, ...styles.container }}>
+      <Text>Click Below For Recommendation</Text>
+      <Button
+        onPress={() => {
+          setIsLoading(true);
+          setTimeout(() => {
+            setIsLoading(false);
+            props.item.setFetchedAPI(true);
+          }, 5000);
+        }}
+      >
+        click me
+      </Button>
+      <ActivityIndicator animating={isLoading} />
+    </View>
+  );
+}
+function Fetched() {
+  return <Text>API Fetched</Text>;
+}
 export default function RecommendationScreen({ navigation }) {
-    const { colors } = useTheme();
-    return (
-        <View style={{ backgroundColor: colors.card, ...styles.container }}>
-            <Text>This is Recommendation Screen</Text>
-            <Button onPress={() => navigation.navigate('Home')}>click me</Button>
-        </View>
-    );
+  const [fetchedAPI, setFetchedAPI] = React.useState(false);
+
+  return fetchedAPI === false ? (
+    <Unfetched item={{ setFetchedAPI }} />
+  ) : (
+    <Fetched />
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    text: {
-        // fontSize: 40,
-        // color: theme.colors.text
-        color: "black"
-    }
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    // fontSize: 40,
+    // color: theme.colors.text
+    color: "black",
+  },
 });
